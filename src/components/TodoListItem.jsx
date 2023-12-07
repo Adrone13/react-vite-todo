@@ -4,22 +4,26 @@ export function TodoListItem(props) {
   const { todo, onDoneChange, onEdit, onDelete } = props;
 
   const [isEdited, setIsEdited] = useState(false);
-  const [editedNote, setEditedNote] = useState(null);
+  const [editedNote, setEditedNote] = useState('');
 
   const handleEditStart = () => {
     setIsEdited(true);
+    setEditedNote(todo.text);
   };
   const handleEditChange = (text) => {
     setEditedNote(text);
   };
   const handleEditConfirm = () => {
-    onEdit(editedNote);
-    setEditedNote(null);
+    if (todo.text !== editedNote) {
+      onEdit(editedNote);
+    }
+
+    setEditedNote('');
     setIsEdited(false);
   }
   const handleEditReject = () => {
+    setEditedNote('');
     setIsEdited(false);
-    setEditedNote(null);
   }
   
 
@@ -29,13 +33,13 @@ export function TodoListItem(props) {
         className='notes-list-item-checkbox'
         type="checkbox"
         checked={todo.isDone} 
-        onChange={onDoneChange}
+        onChange={(e) => onDoneChange(e.target.checked)}
       />
       {isEdited
         ? <input 
             className='input' 
             type="text" 
-            defaultValue={todo.text}
+            value={editedNote}
             onChange={(e) => handleEditChange(e.target.value)} 
           />
         : <p className='notes-list-item-text'>{todo.text}</p>
@@ -49,6 +53,7 @@ export function TodoListItem(props) {
       {isEdited && <button 
         className='button notes-list-item-button'
         onClick={() => handleEditConfirm(todo.id)}
+        disabled={todo.text === editedNote}
       >
         ✅
       </button>}

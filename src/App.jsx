@@ -16,7 +16,7 @@ function App() {
 
     const createdAt = new Date();
     const note = {
-      id: `temp_note_id-${createdAt.toISOString()}`,
+      id: Date.now(),
       text: text,
       isDone: false,
     };
